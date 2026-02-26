@@ -8,10 +8,10 @@ const app = express()
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:4173',   // vite preview
+    'https://vosemsorok.com',
+    'https://www.vosemsorok.com',
   ]
-}))
+}));
 
 app.use(express.json())
 app.use('/api/projects', projectsRouter)
