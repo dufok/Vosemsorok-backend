@@ -1,29 +1,33 @@
-import { Router, Request, Response } from "express"
-import path from "path"
-import fs from "fs"
+import { Router, Request, Response } from "express";
+import path from "path";
+import fs from "fs";
 
-const router = Router()
-const PORTFOLIO_DIR = process.env.PORTFOLIO_DIR || "/srv/data/portfolio"
+const router = Router();
 
-// GET /images/10-2025-JUNION/photo_01.png
-router.get("/:slug/:filename", (req: Request, res: Response) => {
-  const slug = String(req.params.slug)
-  const filename = String(req.params.filename)
+const PORTFOLIO_DIR = process.env.PORTFOLIO_DIR || "/var/lib/pgsql/portfolio";
 
-  if (slug.includes("..") || filename.includes("..")) {
-    res.status(400).json({ error: "Invalid path" })
-    return
+// GET /images/:slug/web/:filename
+router.get("/:slug/web/:filename", (req: Request, res: Response) => {
+  const slug = req.params.slug as string;
+  const filename = req.params.filename as string; // e.g. "1.jpg"
+
+  if (!filename) {
+    return res.status(400).json({ error: "Missing filename" });
   }
 
-  const filePath = path.join(PORTFOLIO_DIR, slug, filename)
+  // Basic safety: no directory traversal
+  if (slug.includes("..") || filename.includes("..")) {
+    return res.status(400).json({ error: "Invalid path" });
+  }
+
+  // We know all optimized images live under web/
+  const filePath = path.join(PORTFOLIO_DIR, slug, "web", filename);
 
   if (!fs.existsSync(filePath)) {
-    res.status(404).json({ error: "Image not found" })
-    return
+    return res.status(404).json({ error: "Image not found" });
   }
 
-  res.sendFile(filePath)
-})
+  return res.sendFile(filePath);
+});
 
-export default router
-
+export default router;
