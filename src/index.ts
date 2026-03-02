@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 // Fix BigInt JSON serialization (folder_mtime field is BigInt in Prisma)
 (BigInt.prototype as any).toJSON = function () {
   return this.toString()
