@@ -11,6 +11,8 @@ const allowedOrigins = [
   'https://www.vosemsorok.com',
   'https://badpromt.xyz',
   'https://www.badpromt.xyz',
+  'https://badprompt.xyz',
+  'https://www.badprompt.xyz',
 ]
 
 app.use(cors({
