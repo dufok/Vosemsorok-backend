@@ -30,7 +30,9 @@ app.use(cors({
 
 app.use(express.json())
 app.use('/api/projects', projectsRouter)
-app.use('/images', imagesRouter)
+// Картинки — публичная статика: открытый CORS, чтобы их можно было
+// фетчить с любых страниц (Upwork/Workana-пайплайн MoneyFinder).
+app.use('/images', cors(), imagesRouter)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
